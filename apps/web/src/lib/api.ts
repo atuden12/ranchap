@@ -82,6 +82,8 @@ export async function fetchFlowGrid(): Promise<FlowGridData> {
 
 /**
  * Upload an xlsx for import. Returns the parsed importer summary.
+ * On error, surfaces the full server-side stderr + stdout tails so the
+ * underlying cause is visible in the UI.
  */
 export async function uploadImportXlsx(
   file: File,
@@ -94,8 +96,21 @@ export async function uploadImportXlsx(
     body: form,
   });
   if (!res.ok) {
-    const body = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(body.error ?? `upload failed (${res.status})`);
+    const body = (await res.json().catch(() => ({}))) as {
+      error?: string;
+      exit_code?: number;
+      stderr?: string;
+      stdout?: string;
+    };
+    const detail = [
+      body.error ?? `upload failed (${res.status})`,
+      body.exit_code != null ? `exit_code=${body.exit_code}` : null,
+      body.stderr ? `\n--- stderr (tail) ---\n${body.stderr}` : null,
+      body.stdout ? `\n--- stdout (tail) ---\n${body.stdout}` : null,
+    ]
+      .filter(Boolean)
+      .join('\n');
+    throw new Error(detail);
   }
   return (await res.json()) as { ok: boolean; summary: Record<string, unknown> | null; stdout_tail?: string };
 }

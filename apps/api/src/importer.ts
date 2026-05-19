@@ -1,4 +1,6 @@
 import { spawn } from 'node:child_process';
+import path from 'node:path';
+import fs from 'node:fs';
 import { REPO_ROOT } from './paths.js';
 
 export interface ImportResult {
@@ -16,13 +18,30 @@ export interface ImportResult {
  * module-level state — wrapping it cleanly would be a larger refactor.
  *
  * Pass an absolute path to the xlsx (e.g. multer temp file).
+ *
+ * Production (Docker image): spawns `node apps/api/dist/cli/import.js`
+ *                            because src/ isn't shipped in the runtime image.
+ * Dev:                       spawns `npm run import` which invokes tsx on src/.
  */
 export function runImport(absoluteFilePath: string): Promise<ImportResult> {
   return new Promise((resolve, reject) => {
     const env = { ...process.env, INIT_CWD: REPO_ROOT };
-    const child = spawn('npm', ['run', 'import', '--', '--file', absoluteFilePath], {
+    const compiledCli = path.join(REPO_ROOT, 'apps', 'api', 'dist', 'cli', 'import.js');
+    const useCompiled = process.env.NODE_ENV === 'production' || fs.existsSync(compiledCli);
+
+    let cmd: string;
+    let args: string[];
+    if (useCompiled) {
+      cmd = 'node';
+      args = [compiledCli, '--file', absoluteFilePath];
+    } else {
+      cmd = 'npm';
+      args = ['run', 'import', '--', '--file', absoluteFilePath];
+    }
+
+    const child = spawn(cmd, args, {
       cwd: REPO_ROOT,
-      shell: true, // needed for npm.cmd on Windows
+      shell: cmd === 'npm', // shell needed only for npm.cmd on Windows
       env,
     });
 
