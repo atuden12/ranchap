@@ -1,0 +1,53 @@
+# Fly.io config for RanchApp.
+# Run once: `fly launch --no-deploy` to claim the app name + region. Then:
+#   fly volumes create ranchapp_data --region <region> --size 1
+#   fly secrets set APP_USERNAME=... APP_PASSWORD_HASH='...' SESSION_SECRET=...
+#   fly deploy
+
+app = "ranchapp"          # change to your unique app name
+primary_region = "iad"    # change to closest region — see `fly platform regions`
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "8080"
+  RANCHAPP_DB = "/data/ranch.db"
+
+# Persistent volume for the SQLite DB. Survives restarts and deploys.
+[mounts]
+  source = "ranchapp_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0      # set to 1 if you want zero cold-start latency
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 100
+    soft_limit = 50
+
+# Smallest free-tier-friendly VM. Bump cpus / memory if responses get sluggish.
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
+[[restart]]
+  policy = "on-failure"
+  retries = 5
+
+[checks.http]
+  type = "http"
+  port = 8080
+  method = "GET"
+  path = "/api/auth/me"
+  interval = "30s"
+  timeout = "5s"
+  grace_period = "10s"

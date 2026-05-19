@@ -1,0 +1,38 @@
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+
+# TypeScript build artifacts
+*.tsbuildinfo
+
+# Vite config compiled artifacts (TypeScript emits these next to .ts source)
+apps/web/vite.config.js
+apps/web/vite.config.d.ts
+
+# Local env / data
+.env
+.env.local
+!.env.example
+data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Imports (raw spreadsheets — don't commit owner data)
+import/*.xlsx
+import/*.xlsm
+import/*.xls
+import/*.csv
+!import/.gitkeep

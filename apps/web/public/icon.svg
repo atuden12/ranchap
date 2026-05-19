@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="RanchApp">
+  <rect width="512" height="512" rx="96" fill="#0a0a0a"/>
+  <g transform="translate(96 96)" fill="none" stroke="#f97316" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 96 Q40 40 96 40 L224 40 Q280 40 280 96 L280 168 Q280 192 296 200 L312 208 Q320 256 280 272 L264 248 L216 280 L160 264 L104 280 L56 248 L40 272 Q0 256 8 208 L24 200 Q40 192 40 168 Z"/>
+    <circle cx="120" cy="120" r="10" fill="#f97316"/>
+    <circle cx="200" cy="120" r="10" fill="#f97316"/>
+    <path d="M140 168 Q160 188 180 168"/>
+  </g>
+</svg>

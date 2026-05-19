@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+**/dist
+**/build
+data
+import/*.xlsx
+import/*.xlsm
+.git
+.github
+.vscode
+.idea
+*.log
+.env
+.env.*
+!.env.example
