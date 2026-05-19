@@ -363,3 +363,5 @@ Once your customer is on the hosted URL, you (or they) can import a fresh `Stock
 - **Phase 3 candidates (sketched separately):** feeding records, budget/cost tracking, per-class ADG matrix editor, manual transaction CRUD
 - **Polish backlog:** mobile-friendly Stock on Hand cards, URL-routed views, automated daily backup of `ranch.db`, multi-user logins with roles
 - **Stretch:** multi-user with sync (deferred from spec)
+#   r a n c h - a p  
+ 
