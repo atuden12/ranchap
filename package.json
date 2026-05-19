@@ -24,6 +24,7 @@
     "inspect": "npm --workspace @ranchapp/api run inspect --",
     "hash-password": "npm --workspace @ranchapp/api run hash-password --",
     "start": "node apps/api/dist/server.js",
+    "deploy": "node scripts/deploy.mjs",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\""
   },
